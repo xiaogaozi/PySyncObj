@@ -23,6 +23,9 @@ class SyncObjConf(object):
         # Commands queue is used to store commands before real processing.
         self.commandsQueueSize = kwargs.get('commandsQueueSize', 100000)
 
+        # Command greater then maxCommandSize bytes will be splitted into multiple.
+        self.maxCommandSize = kwargs.get('maxCommandSize', 50000)
+
         # After randomly selected timeout (in range from minTimeout to maxTimeout)
         # leader considered dead, and leader election starts.
         self.raftMinTimeout = kwargs.get('raftMinTimeout', 0.4)

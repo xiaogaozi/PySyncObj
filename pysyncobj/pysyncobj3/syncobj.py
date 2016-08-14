@@ -172,10 +172,15 @@ class SyncObj(object):
 
     def _applyCommand(self, command, callback, commandType = None):
         try:
-            if commandType is None:
+            if commandType is not None:
+                command = _bchr(commandType) + command
+
+            if len(command) <= self.__conf.maxCommandSize:
                 self.__commandsQueue.put_nowait((command, callback))
             else:
-                self.__commandsQueue.put_nowait((_bchr(commandType) + command, callback))
+                for i in range(0, len(command), self.__conf.maxCommandSize):
+                    self.__commandsQueue.put_nowait((command, callback))
+
         except queue.Full:
             self.__callErrCallback(FAIL_REASON.QUEUE_FULL, callback)
 
